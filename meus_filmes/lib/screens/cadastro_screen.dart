@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CadastroScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onFilmeAdicionado;
@@ -56,6 +57,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentYear = int.parse(DateFormat('yyyy').format(DateTime.now()));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -79,8 +82,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   labelStyle: TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    value!.isEmpty ? 'Informe o título do filme' : null,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Informe o título do filme';
+                  } else if (value.length < 3) {
+                    return 'O título deve ter pelo menos 3 caracteres';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 12),
               TextFormField(
@@ -92,8 +101,19 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   labelStyle: TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    value!.isEmpty ? 'Informe o ano de lançamento' : null,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Informe o ano de lançamento';
+                  } else if (int.tryParse(value) == null) {
+                    return 'Por favor, insira um ano válido';
+                  } else {
+                    int year = int.parse(value);
+                    if (year < 1900 || year > currentYear) {
+                      return 'O ano deve ser entre 1900 e o ano atual ($currentYear)';
+                    }
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 12),
               TextFormField(
@@ -104,8 +124,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   labelStyle: TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    value!.isEmpty ? 'Informe o diretor do filme' : null,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Informe o diretor do filme';
+                  } else if (value.length < 3) {
+                    return 'O nome do diretor deve ter pelo menos 3 caracteres';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 12),
               TextFormField(
@@ -117,8 +143,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
-                validator: (value) =>
-                    value!.isEmpty ? 'Informe um resumo do filme' : null,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Informe um resumo do filme';
+                  } else if (value.length < 10) {
+                    return 'O resumo deve ter pelo menos 10 caracteres';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 12),
               TextFormField(
@@ -158,7 +190,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 ),
                 child: Text(
                   widget.filme != null ? 'Atualizar Filme' : 'Salvar Filme',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ],

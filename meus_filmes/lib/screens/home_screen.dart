@@ -44,6 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
         .showSnackBar(SnackBar(content: Text('Filme removido!')));
   }
 
+  bool _isValidImageUrl(String url) {
+    // Verifique se o URL é válido
+    return Uri.tryParse(url)?.hasAbsolutePath ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +65,16 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: filmes.isEmpty
-            ? Center(child: CircularProgressIndicator())
+            ? Center(
+                child: Text(
+                  'Não há filmes disponíveis.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
             : ListView.builder(
                 itemCount: filmes.length,
                 itemBuilder: (context, index) {
@@ -90,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ClipRRect(
                             borderRadius:
                                 BorderRadius.vertical(top: Radius.circular(16)),
-                            child: filme['url_cartaz']!.isNotEmpty
+                            child: _isValidImageUrl(filme['url_cartaz'])
                                 ? Image.network(
                                     filme['url_cartaz'],
                                     height: 220,
