@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class CadastroScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onFilmeAdicionado;
+  final Map<String, dynamic>? filme;
 
-  CadastroScreen({required this.onFilmeAdicionado});
+  CadastroScreen({required this.onFilmeAdicionado, this.filme});
 
   @override
   _CadastroScreenState createState() => _CadastroScreenState();
@@ -11,13 +12,25 @@ class CadastroScreen extends StatefulWidget {
 
 class _CadastroScreenState extends State<CadastroScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _anoController = TextEditingController();
   final TextEditingController _direcaoController = TextEditingController();
   final TextEditingController _resumoController = TextEditingController();
   final TextEditingController _urlController = TextEditingController();
   double _nota = 3.0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.filme != null) {
+      _tituloController.text = widget.filme!['titulo'];
+      _anoController.text = widget.filme!['ano'].toString();
+      _direcaoController.text = widget.filme!['direcao'];
+      _resumoController.text = widget.filme!['resumo'];
+      _urlController.text = widget.filme!['url_cartaz'];
+      _nota = widget.filme!['nota'];
+    }
+  }
 
   void _salvarFilme() {
     if (_formKey.currentState!.validate()) {
@@ -28,10 +41,15 @@ class _CadastroScreenState extends State<CadastroScreen> {
         'resumo': _resumoController.text,
         'url_cartaz': _urlController.text,
         'nota': _nota,
-        'expandido': false,
       };
 
-      widget.onFilmeAdicionado(novoFilme);
+      if (widget.filme != null) {
+        novoFilme['id'] = widget.filme!['id'];
+        widget.onFilmeAdicionado(novoFilme);
+      } else {
+        widget.onFilmeAdicionado(novoFilme);
+      }
+
       Navigator.pop(context);
     }
   }
@@ -41,10 +59,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Adicionar Filme',
-          style: TextStyle(
-            color: Colors.white, // Define o texto como branco
-          ),
+          widget.filme != null ? 'Editar Filme' : 'Adicionar Filme',
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.red,
       ),
@@ -141,7 +157,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   padding: EdgeInsets.symmetric(vertical: 14),
                 ),
                 child: Text(
-                  'Salvar Filme',
+                  widget.filme != null ? 'Atualizar Filme' : 'Salvar Filme',
                   style: TextStyle(fontSize: 18),
                 ),
               ),
