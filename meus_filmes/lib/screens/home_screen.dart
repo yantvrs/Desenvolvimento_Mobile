@@ -51,8 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(
           'Meus Filmes',
           style: TextStyle(
-            color: Colors.white,
-          ),
+              color: Colors.white, fontFamily: 'BebasNeue', fontSize: 40),
         ),
         backgroundColor: Colors.red,
         centerTitle: true,
