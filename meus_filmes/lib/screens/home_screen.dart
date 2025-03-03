@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'cadastro_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,7 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
       'url_cartaz':
           'https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg',
       'nota': 4.5,
-      'expandido': false,
     },
     {
       'titulo': 'A Origem',
@@ -25,9 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
       'resumo': 'Um ladrão entra nos sonhos das pessoas para roubar segredos.',
       'url_cartaz': '',
       'nota': 4.7,
-      'expandido': false,
     },
   ];
+
+  void _adicionarFilme(Map<String, dynamic> novoFilme) {
+    setState(() {
+      filmes.add(novoFilme);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,23 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(
           'Meus Filmes',
           style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: 2,
-            shadows: [
-              Shadow(
-                blurRadius: 10,
-                color: Colors.black.withOpacity(0.5),
-                offset: Offset(2, 2),
-              ),
-            ],
+            color: Colors.white, // Define o texto como branco
           ),
         ),
-        backgroundColor: Colors.red, // Fundo vermelho
-        elevation: 5, // Sombra na parte inferior do AppBar
-        centerTitle: true, // Centralizar o título
-        toolbarHeight: 60, // Aumentar a altura do AppBar
+        backgroundColor: Colors.red,
+        centerTitle: true,
       ),
       backgroundColor: Colors.black,
       body: Padding(
@@ -62,9 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
           itemBuilder: (context, index) {
             final filme = filmes[index];
             return GestureDetector(
-              onTap: () {
-                // Navegar para tela de detalhes (futuramente)
-              },
               onLongPress: () {
                 setState(() {
                   filmes.removeAt(index);
@@ -75,22 +65,16 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Card(
                 color: Colors.grey[850],
-                elevation: 8, // Sombra para dar um aspecto mais moderno
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(16), // Bordas arredondadas
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                margin: EdgeInsets.symmetric(vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Imagem do Cartaz
                     ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(
-                              16)), // Bordas arredondadas na imagem
-                      child: filme['url_cartaz'] != null &&
-                              filme['url_cartaz']!.isNotEmpty
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(16)),
+                      child: filme['url_cartaz']!.isNotEmpty
                           ? Image.network(
                               filme['url_cartaz'],
                               height: 220,
@@ -113,7 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Título e Ano do Filme
                           Text(
                             filme['titulo'],
                             style: TextStyle(
@@ -131,19 +114,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           SizedBox(height: 8),
-                          // Descrição curta
                           Text(
                             filme['resumo'],
                             style: TextStyle(
                               color: Colors.white60,
                               fontSize: 12,
                             ),
-                            overflow: TextOverflow
-                                .ellipsis, // Previne overflow do texto
-                            maxLines: 2, // Limita o número de linhas
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                           SizedBox(height: 8),
-                          // Avaliação
                           Row(
                             children: [
                               Icon(
@@ -175,7 +155,13 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.redAccent,
         child: Icon(Icons.add, color: Colors.white),
         onPressed: () {
-          // Navegar para tela de cadastro (futuramente)
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CadastroScreen(onFilmeAdicionado: _adicionarFilme),
+            ),
+          );
         },
       ),
     );
