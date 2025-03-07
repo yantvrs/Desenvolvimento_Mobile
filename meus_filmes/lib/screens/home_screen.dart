@@ -45,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool _isValidImageUrl(String url) {
-    // Verifique se o URL é válido
     return Uri.tryParse(url)?.hasAbsolutePath ?? false;
   }
 
@@ -81,7 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   final filme = filmes[index];
                   return GestureDetector(
                     onTap: () {
-                      // Navegar para editar o filme
                       Navigator.push(
                         context,
                         MaterialPageRoute(
